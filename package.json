@@ -6,6 +6,6 @@
     "obfuscate": "node obfuscate.js p2p-tracker.html dist/p2p-tracker.html"
   },
   "dependencies": {
-    "javascript-obfuscator": "^5.0.0"
+    "javascript-obfuscator": "^4.1.1"
   }
 }
