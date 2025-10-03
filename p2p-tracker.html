@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binance P2P Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #111827;
+/* gray-900 */
+            --bg-secondary: #1F2937;
+/* gray-800 */
+            --bg-tertiary: #374151;
+/* gray-700 */
+            --text-primary: #F9FAFB;
+/* gray-50 */
+            --text-secondary: #D1D5DB;
+/* gray-300 */
+            --accent-yellow: #FBBF24;
+/* amber-400 */
+            --accent-green: #34D399;
+/* emerald-400 */
+            --accent-red: #F87171;
+/* red-400 */
+            --accent-blue: #60A5FA;
+/* blue-400 */
+            --accent-purple: #A78BFA;
+/* violet-400 */
+            --accent-cyan: #22D3EE;
+/* cyan-400 */
+        }
+        body {
+            font-family: 'Padauk', sans-serif;
+background-color: var(--bg-primary);
+            color: var(--text-primary);
+            scroll-behavior: smooth;
+        }
+        .glass-card {
+            background: rgba(31, 41, 55, 0.6);
+/* bg-secondary with opacity */
+            backdrop-filter: blur(10px);
+border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .btn {
+            transition: all 0.3s ease;
+}
+        .btn:hover {
+            transform: translateY(-2px);
+box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .input-field {
+            background-color: var(--bg-tertiary);
+border: 1px solid transparent;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+        .input-field:focus {
+            border-color: var(--accent-yellow);
+box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.3);
+            outline: none;
+}
+        /* Modal transition */
+        .modal.hidden {
+            opacity: 0;
+pointer-events: none;
+        }
+        .modal {
+            transition: opacity 0.3s ease-in-out;
+}
+        /* Hide number input spinners */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+}
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto max-w-5xl p-4 md:p-6">
+
+        <header class="text-center my-8">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-500">Binance P2P Tracker</h1>
+            <p class="text-md md:text-lg text-gray-400 mt-2">သင်၏ USDT Portfolio ကို စီမံခန့်ခွဲပါ</p>
+        </header>
+
+            <section id="dashboard-section" class="mb-8">
+             <div class="glass-card p-4 sm:p-6 rounded-2xl shadow-2xl">
+                <h2 class="text-xl font-bold text-yellow-400 mb-4">သင်၏ Portfolio</h2>
+                <div id="mainDashboard" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 text-center">
+                                 </div>
+            </div>
+        </section>
+        
+        <section id="live-price-section" class="mb-8">
+            <div class="glass-card p-6 rounded-2xl shadow-2xl border-2 border-cyan-400/30 bg-gradient-to-br from-cyan-900/30 via-gray-900 to-gray-900">
+               
+ <div class="max-w-md mx-auto text-center">
+                    <label for="currentMarketPrice" class="block mb-2 font-medium text-cyan-300">Live Portfolio ကြည့်ရန် လက်ရှိ USDT ပေါက်ဈေးထည့်ပါ</label>
+                    <input type="number" id="currentMarketPrice" class="input-field text-white text-xl rounded-lg w-full p-3 text-center" placeholder="4,800">
+                </div>
+            </div>
+        
+</section>
+        
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+            <div class="glass-card p-6 rounded-2xl shadow-2xl flex flex-col">
+                <h3 class="text-xl font-bold text-green-400 mb-4">ဝယ်ယူမှုအသစ်</h3>
+             
+   <div class="space-y-4 flex-grow">
+                    <div>
+                        <label for="usdtAmountBuy" class="text-sm text-gray-400">USDT အရေအတွက်</label>
+                        <input type="number" id="usdtAmountBuy" class="input-field w-full p-2.5 rounded-lg mt-1" placeholder="100" required>
+              
+      </div>
+                    <div>
+                        <label for="buyPrice" class="text-sm text-gray-400">၀ယ်ဈေး (MMK)</label>
+                        <input type="number" id="buyPrice" class="input-field w-full p-2.5 rounded-lg mt-1" placeholder="4,750" required>
+             
+       </div>
+                    <div>
+                        <label for="paymentMethodBuy" class="text-sm text-gray-400">ငွေပေးချေမှု</label>
+                        <select id="paymentMethodBuy" class="input-field w-full p-2.5 rounded-lg mt-1">
+                
+            <option value="Kpay">Kpay</option>
+                            <option value="Wavepay">Wavepay</option>
+                        </select>
+                    </div>
+              
+  </div>
+                <button id="addBuyBtn" class="btn w-full mt-6 text-gray-900 bg-green-400 hover:bg-green-500 font-bold rounded-lg text-md px-5 py-3 text-center">မှတ်တမ်းတင်မည်</button>
+                <div id="addBuyError" class="mt-2 text-center text-red-400 font-medium text-sm h-4"></div>
+            </div>
+            
+                   <div class="glass-card p-6 rounded-2xl shadow-2xl flex flex-col">
+                <h3 class="text-xl font-bold text-red-400 mb-4">ရောင်းချမှုအသစ်</h3>
+                <div class="space-y-4 flex-grow">
+                    <div>
+                        <label for="usdtAmountSell" class="text-sm text-gray-400">USDT အရေအတွက်</label>
+ 
+                       <input type="number" id="usdtAmountSell" class="input-field w-full p-2.5 rounded-lg mt-1" placeholder="50" required>
+                    </div>
+                    <div>
+                        <label for="sellPrice" class="text-sm text-gray-400">ရောင်းဈေး 
+(MMK)</label>
+                        <input type="number" id="sellPrice" class="input-field w-full p-2.5 rounded-lg mt-1" placeholder="4,850" required>
+                    </div>
+                    <div>
+                        <label for="paymentMethodSell" class="text-sm 
+text-gray-400">ငွေလက်ခံရရှိမှု</label>
+                        <select id="paymentMethodSell" class="input-field w-full p-2.5 rounded-lg mt-1">
+                            <option value="Kpay">Kpay</option>
+                            <option value="Wavepay">Wavepay</option>
+            
+            </select>
+                    </div>
+                </div>
+                <button id="addSellBtn" class="btn w-full mt-6 text-white bg-red-500 hover:bg-red-600 font-bold rounded-lg text-md px-5 py-3 text-center">မှတ်တမ်းတင်မည်</button>
+                <div id="addSellError" class="mt-2 text-center text-red-400 font-medium text-sm 
+h-4"></div>
+            </div>
+
+             <div class="glass-card p-6 rounded-2xl shadow-2xl flex flex-col">
+                <h3 class="text-xl font-bold text-purple-400 mb-4">Portfolio ချိန်ညှိရန်</h3>
+                <div class="space-y-4 flex-grow">
+               
+     <div>
+                        <label for="usdtAmountAdjust" class="text-sm text-gray-400">USDT အရေအတွက်</label>
+                        <input type="number" id="usdtAmountAdjust" class="input-field w-full p-2.5 rounded-lg mt-1" placeholder="10" required>
+                    </div>
+              
+      <div>
+                        <label for="adjustmentType" class="text-sm text-gray-400">လုပ်ဆောင်ချက်</label>
+                        <select id="adjustmentType" class="input-field w-full p-2.5 rounded-lg mt-1">
+                            <option value="add">အပေါင်း</option>
+        
+                    <option value="subtract">အနှုတ်</option>
+                        </select>
+                    </div>
+                </div>
+                <button id="adjustBtn" class="btn 
+w-full mt-6 text-white bg-purple-500 hover:bg-purple-600 font-bold rounded-lg text-md px-5 py-3 text-center">ချိန်ညှိမည်</button>
+                <div id="adjustError" class="mt-2 text-center text-red-400 font-medium text-sm h-4"></div>
+            </div>
+        </section>
+
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+            <div class="lg:col-span-2 glass-card p-6 rounded-2xl shadow-2xl">
+    
+            <h2 class="text-xl font-bold text-yellow-400 mb-4">အရောင်းအဝယ် မှတ်တမ်းများ</h2>
+                <div id="transactionHistoryContainer" class="space-y-3 max-h-[400px] overflow-y-auto pr-2">
+                    <div id="noTransactionsText" class="text-center py-8">
+                        <svg class="mx-auto h-12 w-12 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" 
+stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                        <h3 class="mt-2 text-sm font-medium text-gray-400">မှတ်တမ်းများ မရှိသေးပါ</h3>
+                        <p class="mt-1 text-sm text-gray-500">အရောင်းအဝယ်အသစ် ထည့်သွင်းလိုက်ပါ။</p>
+                    </div>
+ 
+               </div>
+            </div>
+             <div class="lg:col-span-1 glass-card p-6 rounded-2xl shadow-2xl">
+                <h3 class="text-xl font-bold text-yellow-400 mb-4">ငွေပေးချေမှု Summary</h3>
+                <div id="paymentSummaryContainer" class="space-y-3 
+text-sm"></div>
+            </div>
+        </section>
+
+        <section class="glass-card p-6 rounded-2xl shadow-2xl border border-red-500/30">
+            <h2 class="text-xl font-bold text-red-400 mb-4">Settings</h2>
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 mb-4 md:mb-0">သင်၏ 
+မှတ်တမ်းများအားလုံးကို ဖျက်သိမ်းပါ။<br><span class="font-bold">ဤလုပ်ဆောင်ချက်ကို ပြန်ပြင်၍မရပါ။</span></p>
+                <button id="clearDataBtn" class="btn text-white bg-red-600 hover:bg-red-700 font-bold rounded-lg text-md px-5 py-3 text-center">ဒေတာအားလုံးဖျက်မည်</button>
+            </div>
+        </section>
+
+
+        <footer class="text-center text-gray-600 text-sm mt-8">
+            <p>Binance P2P Tracker &copy;
+2024</p>
+        </footer>
+
+    </div>
+    
+    <div id="editModal" class="modal hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50">
+        <div class="glass-card p-6 rounded-2xl shadow-2xl w-full max-w-md">
+            <h3 id="editModalTitle" class="text-xl font-bold mb-4">မှတ်တမ်းပြင်ဆင်ရန်</h3>
+            <div class="space-y-4">
+                <div>
+  
+                  <label for="editUsdtAmount" class="text-sm text-gray-400">USDT အရေအတွက်</label>
+                    <input type="number" id="editUsdtAmount" class="input-field w-full p-2.5 rounded-lg mt-1" required>
+                </div>
+                <div id="editPriceContainer">
+                 
+   <label for="editPrice" class="text-sm text-gray-400">ဈေးနှုန်း (MMK)</label>
+                    <input type="number" id="editPrice" class="input-field w-full p-2.5 rounded-lg mt-1" required>
+                </div>
+                <div id="editPaymentContainer">
+                    <label for="editPaymentMethod" class="text-sm text-gray-400">ငွေပေးချေမှု</label>
+         
+           <select id="editPaymentMethod" class="input-field w-full p-2.5 rounded-lg mt-1">
+                        <option value="Kpay">Kpay</option>
+                        <option value="Wavepay">Wavepay</option>
+                    </select>
+             
+   </div>
+            </div>
+            <div id="editError" class="mt-4 text-center text-red-400 font-medium text-sm h-4"></div>
+            <div class="mt-6 flex justify-end gap-4">
+                <button id="cancelEditBtn" class="btn text-gray-300 bg-gray-600 hover:bg-gray-500 font-bold rounded-lg text-md px-5 py-2.5 text-center">မလုပ်တော့ပါ</button>
+                <button id="saveEditBtn" class="btn text-gray-900 bg-yellow-400 hover:bg-yellow-500 font-bold 
+rounded-lg text-md px-5 py-2.5 text-center">သိမ်းဆည်းမည်</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirmClearModal" class="modal hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50">
+        <div class="glass-card p-6 rounded-2xl shadow-2xl w-full max-w-md text-center">
+            <svg class="mx-auto h-12 w-12 text-red-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 
+1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>
+            <h3 class="text-xl font-bold mt-4">သေချာပါသလား?</h3>
+            <p class="text-gray-400 mt-2">သင်၏ မှတ်တမ်းများအားလုံး အပြီးတိုင် ဖျက်သိမ်းသွားမည်ဖြစ်ပြီး ပြန်လည်ရယူနိုင်တော့မည် မဟုတ်ပါ။</p>
+            <div class="mt-6 flex justify-center gap-4">
+                <button id="cancelClearBtn" class="btn text-gray-300 bg-gray-600 hover:bg-gray-500 font-bold rounded-lg text-md px-8 py-2.5 text-center">မလုပ်တော့ပါ</button>
+              
+  <button id="confirmClearBtn" class="btn text-white bg-red-600 hover:bg-red-700 font-bold rounded-lg text-md px-8 py-2.5 text-center">အတည်ပြုသည်</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="confirmDeleteTxModal" class="modal hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50">
+        <div class="glass-card p-6 rounded-2xl shadow-2xl w-full max-w-md text-center">
+            <svg class="mx-auto h-12 w-12 text-red-400" xmlns="http://www.w3.org/2000/svg" fill="none" 
+viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>
+            <h3 class="text-xl font-bold mt-4">မှတ်တမ်း ဖျက်မည်?</h3>
+            <p class="text-gray-400 mt-2">ဤမှတ်တမ်းကို အပြီးတိုင် ဖျက်သိမ်းရန် သေချာပါသလား?</p>
+            <div class="mt-6 flex justify-center gap-4">
+                <button id="cancelDeleteTxBtn" class="btn text-gray-300 bg-gray-600 hover:bg-gray-500 font-bold rounded-lg text-md px-8 py-2.5 text-center">မလုပ်တော့ပါ</button>
+  
+              <button id="confirmDeleteTxBtn" class="btn text-white bg-red-600 hover:bg-red-700 font-bold rounded-lg text-md px-8 py-2.5 text-center">ဖျက်မည်</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM ELEMENT SELECTION ---
+            const usdtAmountBuyInput = 
+document.getElementById('usdtAmountBuy');
+            const buyPriceInput = document.getElementById('buyPrice');
+            const paymentMethodBuySelect = document.getElementById('paymentMethodBuy');
+            const addBuyBtn = document.getElementById('addBuyBtn');
+            const addBuyError = document.getElementById('addBuyError');
+const usdtAmountSellInput = document.getElementById('usdtAmountSell');
+            const sellPriceInput = document.getElementById('sellPrice');
+            const paymentMethodSellSelect = document.getElementById('paymentMethodSell');
+            const addSellBtn = document.getElementById('addSellBtn');
+            const addSellError = document.getElementById('addSellError');
+const usdtAmountAdjustInput = document.getElementById('usdtAmountAdjust');
+            const adjustmentTypeSelect = document.getElementById('adjustmentType');
+            const adjustBtn = document.getElementById('adjustBtn');
+            const adjustError = document.getElementById('adjustError');
+
+            const currentMarketPriceInput = document.getElementById('currentMarketPrice');
+const mainDashboard = document.getElementById('mainDashboard');
+            const transactionHistoryContainer = document.getElementById('transactionHistoryContainer');
+            const noTransactionsText = document.getElementById('noTransactionsText');
+            const paymentSummaryContainer = document.getElementById('paymentSummaryContainer');
+// Modals
+            const editModal = document.getElementById('editModal');
+const confirmClearModal = document.getElementById('confirmClearModal');
+            const confirmDeleteTxModal = document.getElementById('confirmDeleteTxModal');
+
+            // Edit Modal Elements
+            const editModalTitle = document.getElementById('editModalTitle');
+const editUsdtAmountInput = document.getElementById('editUsdtAmount');
+            const editPriceInput = document.getElementById('editPrice');
+            const editPaymentMethodSelect = document.getElementById('editPaymentMethod');
+            const editPriceContainer = document.getElementById('editPriceContainer');
+            const editPaymentContainer = document.getElementById('editPaymentContainer');
+const editError = document.getElementById('editError');
+            const saveEditBtn = document.getElementById('saveEditBtn');
+            const cancelEditBtn = document.getElementById('cancelEditBtn');
+// Clear Data Elements
+            const clearDataBtn = document.getElementById('clearDataBtn');
+const confirmClearBtn = document.getElementById('confirmClearBtn');
+            const cancelClearBtn = document.getElementById('cancelClearBtn');
+
+            // Delete Transaction Elements
+            const confirmDeleteTxBtn = document.getElementById('confirmDeleteTxBtn');
+const cancelDeleteTxBtn = document.getElementById('cancelDeleteTxBtn');
+            
+            let transactions = [];
+
+            function saveTransactions() {
+                localStorage.setItem('p2pTransactions', JSON.stringify(transactions));
+}
+
+            function loadTransactions() {
+                const stored = localStorage.getItem('p2pTransactions');
+if (stored) transactions = JSON.parse(stored);
+                renderAll();
+            }
+            
+            function renderAll(){
+                renderTransactions();
+calculateAndDisplayAll();
+            }
+
+            function renderPaymentSummary(buySummary, sellSummary) {
+                paymentSummaryContainer.innerHTML = `
+                    <div>
+                        <h4 class="font-bold text-green-400 mb-2 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 
+8 0 000 16zm.707-10.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L9.414 11H13a1 1 0 100-2H9.414l1.293-1.293z" clip-rule="evenodd" /></svg>သုံးစွဲငွေ</h4>
+                        <div class="flex justify-between items-center text-gray-300"><span>Kpay:</span> <span class="font-semibold">${(buySummary.Kpay || 0).toLocaleString()}</span></div>
+                        <div class="flex justify-between items-center text-gray-300"><span>Wavepay:</span> <span class="font-semibold">${(buySummary.Wavepay || 0).toLocaleString()}</span></div>
+               
+     </div>
+                    <div class="mt-4">
+                        <h4 class="font-bold text-red-400 mb-2 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707a1 1 0 00-1.414-1.414L10.586 9.586 9.293 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>ရရှိငွေ</h4>
+        
+                <div class="flex justify-between items-center text-gray-300"><span>Kpay:</span> <span class="font-semibold">${(sellSummary.Kpay ||
+0).toLocaleString()}</span></div>
+                        <div class="flex justify-between items-center text-gray-300"><span>Wavepay:</span> <span class="font-semibold">${(sellSummary.Wavepay || 0).toLocaleString()}</span></div>
+                    </div>
+                `;
+}
+            
+            function renderTransactions() {
+                if (transactions.length === 0) {
+                    transactionHistoryContainer.innerHTML = '';
+transactionHistoryContainer.appendChild(noTransactionsText);
+                    noTransactionsText.style.display = 'block';
+                } else {
+                    noTransactionsText.style.display = 'none';
+transactionHistoryContainer.innerHTML = '';
+                    const sorted = [...transactions].sort((a, b) => b.id - a.id);
+sorted.forEach(tx => {
+                        const txEl = document.createElement('div');
+                        const totalCost = tx.amount * tx.price;
+                        
+                  
+      let icon, typeText, typeClass, detailsHtml, badgeColorClass, totalCostHtml;
+
+                        switch(tx.type) {
+                            case 'buy':
+                                icon = 
+`<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>`;
+                                typeText = `ဝယ်ယူမှု`; typeClass = 'text-green-400';
+                                detailsHtml = `<p class="text-xs text-gray-400">${tx.amount.toLocaleString()} USDT @ ${tx.price.toLocaleString()} MMK</p>`;
+       
+                         totalCostHtml = `<p class="font-bold text-white">${totalCost.toLocaleString()} MMK</p>`;
+break;
+                            case 'sell':
+                                icon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>`;
+typeText = `ရောင်းချမှု`; typeClass = 'text-red-400';
+                                detailsHtml = `<p class="text-xs text-gray-400">${tx.amount.toLocaleString()} USDT @ ${tx.price.toLocaleString()} MMK</p>`;
+totalCostHtml = `<p class="font-bold text-white">${totalCost.toLocaleString()} MMK</p>`;
+                                break;
+                            case 'add':
+                                icon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
+typeText = `ချိန်ညှိမှု (အပေါင်း)`; typeClass = 'text-purple-400';
+                                detailsHtml = `<p class="text-xs text-gray-400">${tx.amount.toLocaleString()} USDT</p>`;
+                                totalCostHtml = ``;
+                                break;
+case 'subtract':
+                                icon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
+typeText = `ချိန်ညှိမှု (အနှုတ်)`; typeClass = 'text-purple-400';
+                                detailsHtml = `<p class="text-xs text-gray-400">${tx.amount.toLocaleString()} USDT</p>`;
+                                totalCostHtml = ``;
+                                break;
+}
+
+                        switch(tx.paymentMethod) {
+                            case 'Kpay': badgeColorClass = 'bg-blue-600/50 text-blue-300';
+break;
+                            case 'Wavepay': badgeColorClass = 'bg-green-600/50 text-green-300'; break;
+                            default: badgeColorClass = 'bg-gray-600/50 text-gray-300';
+}
+                        
+                        txEl.className = 'bg-gray-700/50 p-3 rounded-lg flex items-center gap-4';
+txEl.innerHTML = `
+                            <div class="flex-shrink-0">${icon}</div>
+                            <div class="flex-grow">
+                                <p class="font-bold ${typeClass}">${typeText}</p>
+      
+                          ${detailsHtml}
+                            </div>
+                            <div class="text-right">
+                 
+               ${totalCostHtml}
+                                <span class="text-xs font-semibold px-2 py-0.5 rounded-full ${badgeColorClass}">${tx.paymentMethod ||
+''}</span>
+                            </div>
+                            <div class="flex items-center">
+                                <button data-id="${tx.id}" class="edit-btn text-gray-500 hover:text-yellow-400 p-1 rounded-full"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" 
+viewBox="0 0 20 20" fill="currentColor"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" /></svg></button>
+                                <button data-id="${tx.id}" class="delete-btn text-gray-500 hover:text-red-400 p-1 rounded-full"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
+      
+                      </div>
+                        `;
+transactionHistoryContainer.appendChild(txEl);
+                    });
+                }
+            }
+            
+            function calculateAndDisplayAll() {
+                const currentPrice = parseFloat(currentMarketPriceInput.value);
+let totalUsdtAcquired = 0, totalInvested = 0, totalSoldUsdt = 0, totalSaleValue = 0;
+const buySummary = { Kpay: 0, Wavepay: 0 };
+                const sellSummary = { Kpay: 0, Wavepay: 0 };
+transactions.forEach(tx => {
+                    const value = tx.amount * tx.price;
+                    if (tx.type === 'buy') {
+                        totalUsdtAcquired += tx.amount;
+                       
+ totalInvested += value;
+                        buySummary[tx.paymentMethod] = (buySummary[tx.paymentMethod] || 0) + value;
+                    } else if (tx.type === 'sell') {
+                        totalSoldUsdt += tx.amount;
+               
+         totalSaleValue += value;
+                        sellSummary[tx.paymentMethod] = (sellSummary[tx.paymentMethod] || 0) + value;
+                    } else if (tx.type === 'add') {
+                        totalUsdtAcquired += tx.amount;
+       
+             } else if (tx.type === 'subtract') {
+                        totalUsdtAcquired -= tx.amount; // Adjustment
+                    }
+                });
+renderPaymentSummary(buySummary, sellSummary);
+                
+                const netBoughtUsdt = transactions
+                    .filter(t => t.type === 'buy' || t.type === 'add')
+                    .reduce((acc, t) => acc + t.amount, 0);
+const averageBuyPrice = netBoughtUsdt > 0 ? totalInvested / netBoughtUsdt : 0;
+                const costOfGoodsSold = totalSoldUsdt * averageBuyPrice;
+const realizedProfitLoss = totalSaleValue - costOfGoodsSold;
+                const remainingUsdt = totalUsdtAcquired - totalSoldUsdt;
+                
+                let unrealizedHtml, liveValueHtml;
+if (remainingUsdt > 0.001 && !isNaN(currentPrice) && currentPrice > 0) {
+                    const currentMarketValue = remainingUsdt * currentPrice;
+const remainingInvestmentValue = remainingUsdt * averageBuyPrice;
+                    const unrealizedProfitLoss = currentMarketValue - remainingInvestmentValue;
+liveValueHtml = `<p class="text-lg md:text-xl font-bold text-cyan-400">${currentMarketValue.toLocaleString('en-US', {maximumFractionDigits: 0})} MMK</p>`;
+unrealizedHtml = `<p class="text-xs md:text-sm ${unrealizedProfitLoss >= 0 ? 'text-green-400' : 'text-red-400'}">(${unrealizedProfitLoss >= 0 ? '+' : ''}${unrealizedProfitLoss.toLocaleString('en-US', {maximumFractionDigits: 0})})</p>`;
+} else {
+                     liveValueHtml = `<p class="text-lg md:text-xl font-bold text-gray-500">-</p>`;
+unrealizedHtml = '';
+                }
+                
+                mainDashboard.innerHTML = `
+                    <div class="glass-card p-3 sm:p-4 rounded-lg flex flex-col justify-center"><p class="text-xs sm:text-sm text-gray-400">လက်ကျန် USDT</p><p class="text-xl md:text-2xl font-bold text-white mt-1">$${remainingUsdt.toLocaleString('en-US', {maximumFractionDigits: 2})}</p></div>
+                    <div class="glass-card p-3 sm:p-4 rounded-lg 
+flex flex-col justify-center"><p class="text-xs sm:text-sm text-gray-400">ပျမ်းမျှဝယ်ဈေး</p><p class="text-xl md:text-2xl font-bold text-white mt-1">${averageBuyPrice.toLocaleString('en-US', {maximumFractionDigits: 0})} MMK</p></div>
+                    <div class="glass-card p-3 sm:p-4 rounded-lg flex flex-col justify-center"><p class="text-xs sm:text-sm text-gray-400">အမြတ်/အရှုံး</p><p class="text-xl md:text-2xl font-bold mt-1 ${realizedProfitLoss >= 0 ? 'text-green-400' : 'text-red-400'}">${realizedProfitLoss >= 0 ?
+'+' : ''}${realizedProfitLoss.toLocaleString('en-US', {maximumFractionDigits: 0})} MMK</p></div>
+                    <div class="glass-card p-3 sm:p-4 rounded-lg flex flex-col justify-center border-2 border-cyan-400/30 bg-gradient-to-br from-cyan-900/30 via-gray-900 to-gray-900"><p class="text-xs sm:text-sm font-medium text-cyan-300">Live Value</p>${liveValueHtml}${unrealizedHtml}</div>
+                `;
+}
+
+            function openModal(modal) { modal.classList.remove('hidden');
+}
+            function closeModal(modal) { modal.classList.add('hidden');
+}
+
+            function setupEventListeners() {
+                const getCurrentHoldings = () => transactions.reduce((acc, tx) => {
+                    if (tx.type === 'buy' || tx.type === 'add') return acc + tx.amount;
+                    if (tx.type === 'sell' || tx.type === 'subtract') return acc - 
+tx.amount;
+                    return acc;
+                }, 0);
+addBuyBtn.addEventListener('click', () => {
+                    const amount = parseFloat(usdtAmountBuyInput.value), price = parseFloat(buyPriceInput.value), pMethod = paymentMethodBuySelect.value;
+                    addBuyError.textContent = '';
+                    if (isNaN(amount) || isNaN(price) || amount <= 0 || price <= 0) { addBuyError.textContent = 'တန်ဖိုးများ မှန်ကန်စွာဖြည့်ပါ။'; return; }
+        
+            transactions.push({ id: Date.now(), type: 'buy', amount, price, paymentMethod: pMethod });
+                    saveTransactions(); renderAll(); usdtAmountBuyInput.value = ''; buyPriceInput.value = '';
+                });
+addSellBtn.addEventListener('click', () => {
+                    const amount = parseFloat(usdtAmountSellInput.value), price = parseFloat(sellPriceInput.value), pMethod = paymentMethodSellSelect.value;
+                    addSellError.textContent = '';
+                    if (isNaN(amount) || isNaN(price) || amount <= 0 || price <= 0) { addSellError.textContent = 'တန်ဖိုးများ မှန်ကန်စွာဖြည့်ပါ။'; return; }
+        
+            if(amount > getCurrentHoldings()) { addSellError.textContent = `လက်ကျန် ${getCurrentHoldings().toLocaleString()} သာရှိပါသည်။`; return; }
+                    transactions.push({ id: Date.now(), type: 'sell', amount, price, paymentMethod: pMethod });
+                    saveTransactions(); renderAll(); usdtAmountSellInput.value = ''; sellPriceInput.value = '';
+                });
+adjustBtn.addEventListener('click', () => {
+                    const amount = parseFloat(usdtAmountAdjustInput.value), type = adjustmentTypeSelect.value;
+                    adjustError.textContent = '';
+                    if (isNaN(amount) || amount <= 0) { adjustError.textContent = 'USDT အရေအတွက် မှန်ကန်စွာဖြည့်ပါ။'; return; }
+                
+    if (type === 'subtract' && amount > getCurrentHoldings()) { adjustError.textContent = `လက်ကျန် ${getCurrentHoldings().toLocaleString()} သာရှိပါသည်။`; return; }
+                    transactions.push({ id: Date.now(), type: type, amount, price: 0, paymentMethod: 'ချိန်ညှိမှု' });
+                    saveTransactions(); renderAll(); usdtAmountAdjustInput.value = '';
+                });
+transactionHistoryContainer.addEventListener('click', (e) => {
+                    const deleteButton = e.target.closest('.delete-btn');
+                    if (deleteButton) {
+                        const txId = parseInt(deleteButton.dataset.id);
+                        confirmDeleteTxModal.dataset.deletingId 
+= txId;
+                        openModal(confirmDeleteTxModal);
+                    }
+                    const editButton = e.target.closest('.edit-btn');
+                    if (editButton) {
+          
+              const txId = parseInt(editButton.dataset.id);
+                        const tx = transactions.find(t => t.id === txId);
+                        if(tx) {
+                           
+ editModal.dataset.editingId = txId;
+                            editUsdtAmountInput.value = tx.amount;
+                            const isAdjustment = tx.type === 'add' || tx.type === 'subtract';
+                            editModalTitle.textContent = 
+isAdjustment ? 'ချိန်ညှိမှု ပြင်ဆင်ရန်' : 'မှတ်တမ်း ပြင်ဆင်ရန်';
+                            editPriceContainer.style.display = isAdjustment ? 'none' : 'block';
+                            editPaymentContainer.style.display = isAdjustment ?
+'none' : 'block';
+                            if (!isAdjustment) {
+                                editPriceInput.value = tx.price;
+editPaymentMethodSelect.value = tx.paymentMethod;
+                            }
+                            openModal(editModal);
+}
+                    }
+                });
+currentMarketPriceInput.addEventListener('input', calculateAndDisplayAll);
+
+                saveEditBtn.addEventListener('click', () => {
+                    const txId = parseInt(editModal.dataset.editingId), txIndex = transactions.findIndex(tx => tx.id === txId);
+                    if (txIndex === -1) return;
+
+                    const originalTx = transactions[txIndex];
+                  
+  const newAmount = parseFloat(editUsdtAmountInput.value);
+                    editError.textContent = '';
+
+                    if (isNaN(newAmount) || newAmount <= 0) { editError.textContent = 'USDT အရေအတွက် မှန်ကန်စွာဖြည့်ပါ။'; return; }
+                    
+                    
+const holdingsWithoutOriginal = transactions.filter(t => t.id !== txId).reduce((acc, t) => acc + (t.type !== 'sell' && t.type !== 'subtract' ? t.amount : -t.amount), 0);
+                    
+                    if ((originalTx.type === 'sell' || originalTx.type === 'subtract') && newAmount > holdingsWithoutOriginal) {
+                         
+editError.textContent = `လက်ကျန် USDT မလုံလောက်ပါ။`; return;
+                    }
+
+                    originalTx.amount = newAmount;
+if (originalTx.type === 'buy' || originalTx.type === 'sell') {
+                        const newPrice = parseFloat(editPriceInput.value);
+if (isNaN(newPrice) || newPrice <= 0) { editError.textContent = 'ဈေးနှုန်း မှန်ကန်စွာဖြည့်ပါ။'; return;
+}
+                        originalTx.price = newPrice;
+originalTx.paymentMethod = editPaymentMethodSelect.value;
+                    }
+                    saveTransactions();
+renderAll(); closeModal(editModal);
+                });
+
+                cancelEditBtn.addEventListener('click', () => closeModal(editModal));
+                editModal.addEventListener('click', (e) => { if (e.target === editModal) closeModal(editModal); });
+clearDataBtn.addEventListener('click', () => openModal(confirmClearModal));
+                cancelClearBtn.addEventListener('click', () => closeModal(confirmClearModal));
+                confirmClearModal.addEventListener('click', (e) => { if (e.target === confirmClearModal) closeModal(confirmClearModal); });
+confirmClearBtn.addEventListener('click', () => {
+                    transactions = [];
+                    saveTransactions();
+                    renderAll();
+                    closeModal(confirmClearModal);
+               
+ });
+
+                // Delete Transaction Modal Listeners
+                cancelDeleteTxBtn.addEventListener('click', () => closeModal(confirmDeleteTxModal));
+confirmDeleteTxModal.addEventListener('click', (e) => { if (e.target === confirmDeleteTxModal) closeModal(confirmDeleteTxModal); });
+confirmDeleteTxBtn.addEventListener('click', () => {
+                    const txId = parseInt(confirmDeleteTxModal.dataset.deletingId);
+                    if(txId) {
+                        transactions = transactions.filter(tx => tx.id !== txId);
+                       
+ saveTransactions();
+                        renderAll();
+                        closeModal(confirmDeleteTxModal);
+                    }
+                });
+}
+
+            // --- INITIAL LOAD ---
+            loadTransactions();
+setupEventListeners();
+        });
+    </script>
+</body>
+</html>
