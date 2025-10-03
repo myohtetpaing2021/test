@@ -1,0 +1,41 @@
+name: Obfuscate HTML scripts
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  obfuscate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run obfuscator
+        run: npm run obfuscate
+
+      - name: Commit & push obfuscated output (if changed)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dist/p2p-tracker.html || true
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: update obfuscated p2p-tracker.html [skip ci]" || true
+            git push
+          else
+            echo "No changes to commit"
+          fi
