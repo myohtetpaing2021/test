@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Express VPN Free - Admin System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        .copy-success {
+            animation: fadeInOut 2s ease-in-out;
+        }
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateY(-10px); }
+            50% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-10px); }
+        }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body class="min-h-full bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900">
+
+    <!-- Login Page -->
+    <div id="loginPage" class="fixed inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 flex items-center justify-center p-4">
+        <!-- Animated Background Elements -->
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+            <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse" style="animation-delay: 2s;"></div>
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse" style="animation-delay: 4s;"></div>
+        </div>
+
+        <div class="relative z-10 w-full max-w-md lg:max-w-lg xl:max-w-xl mx-auto">
+            <!-- Main Login Card -->
+            <div class="bg-white/10 backdrop-blur-xl rounded-3xl p-6 sm:p-8 lg:p-10 xl:p-12 border border-white/20 shadow-2xl">
+                <!-- Logo Section -->
+                <div class="text-center mb-8 lg:mb-10">
+                    <div class="relative mx-auto w-24 h-24 lg:w-32 lg:h-32 xl:w-36 xl:h-36 mb-6 lg:mb-8">
+                        <div class="absolute inset-0 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 rounded-full animate-spin" style="animation-duration: 3s;"></div>
+                        <div class="absolute inset-1 bg-gradient-to-br from-indigo-900 to-purple-900 rounded-full flex items-center justify-center">
+                            <span class="text-4xl lg:text-5xl xl:text-6xl">🔒</span>
+                        </div>
+                    </div>
+                    <h1 class="text-3xl lg:text-4xl xl:text-5xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2 lg:mb-3">Express VPN</h1>
+                    <p class="text-blue-200/80 text-sm lg:text-base xl:text-lg">Premium Access Portal</p>
+                </div>
+
+                <!-- User Credentials Display -->
+                <div class="text-center mb-8 lg:mb-10">
+                    <div class="flex items-center justify-center space-x-3 lg:space-x-4">
+                        <div class="w-8 h-8 lg:w-10 lg:h-10 xl:w-12 xl:h-12 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full flex items-center justify-center shadow-lg">
+                            <span class="text-white text-sm lg:text-base xl:text-lg">👤</span>
+                        </div>
+                        <span class="text-emerald-200 text-sm lg:text-base xl:text-lg font-medium">Password:</span>
+                        <span class="text-white font-mono text-xl lg:text-2xl xl:text-3xl font-bold tracking-wider bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">user123</span>
+                    </div>
+                </div>
+
+                <!-- Login Form -->
+                <form onsubmit="handleLogin(event)" class="space-y-6 lg:space-y-8">
+                    <div>
+                        <label class="text-white text-sm lg:text-base xl:text-lg font-semibold block mb-3 lg:mb-4 flex items-center justify-center">
+                            <span class="mr-2 text-lg lg:text-xl">🔑</span>
+                            Enter Your Password
+                        </label>
+                        <div class="relative">
+                            <input 
+                                type="password" 
+                                id="loginPassword" 
+                                class="w-full px-6 py-4 lg:px-8 lg:py-5 xl:px-10 xl:py-6 bg-black/30 border-2 border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-black/40 transition-all text-center text-lg lg:text-xl xl:text-2xl font-mono tracking-wider"
+                                placeholder="••••••••"
+                                required
+                            >
+                            <div class="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/10 to-purple-500/10 pointer-events-none"></div>
+                        </div>
+                    </div>
+
+                    <button 
+                        type="submit" 
+                        class="w-full relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white py-4 lg:py-5 xl:py-6 rounded-2xl font-bold text-lg lg:text-xl xl:text-2xl transition-all transform hover:scale-105 shadow-xl hover:shadow-2xl"
+                    >
+                        <span class="relative z-10 flex items-center justify-center">
+                            <span class="mr-2 lg:mr-3">🚀</span>
+                            Access VPN Dashboard
+                        </span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 hover:opacity-100 transition-opacity"></div>
+                    </button>
+                </form>
+
+                <!-- Error Message -->
+                <div id="loginError" class="mt-6 text-red-300 text-sm text-center hidden">
+                    <div class="bg-red-500/20 border border-red-400/40 rounded-xl p-4 backdrop-blur-sm">
+                        <span class="text-red-400 text-lg mr-2">❌</span>
+                        <span>Incorrect password. Please try again.</span>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="text-center mt-8 lg:mt-10 pt-6 lg:pt-8 border-t border-white/10">
+                    <div class="flex items-center justify-center space-x-4 lg:space-x-6 text-xs lg:text-sm xl:text-base text-blue-300/60">
+                        <span class="flex items-center"><span class="mr-1 lg:mr-2">🔐</span>Secure</span>
+                        <span class="flex items-center"><span class="mr-1 lg:mr-2">⚡</span>Fast</span>
+                        <span class="flex items-center"><span class="mr-1 lg:mr-2">🌍</span>Global</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Text -->
+            <div class="text-center mt-6 lg:mt-8">
+                <p class="text-white/40 text-xs lg:text-sm xl:text-base">Protected by advanced encryption</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main VPN Page -->
+    <div id="mainPage" class="hidden">
+        <div class="container mx-auto px-4 lg:px-6 xl:px-8 py-8 lg:py-12">
+            <!-- Header with Logout Button -->
+            <div class="text-center mb-6 lg:mb-8">
+                <div class="flex justify-end items-center mb-4 lg:mb-6">
+                    <button onclick="logout()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 lg:px-6 lg:py-3 rounded-lg text-sm lg:text-base transition-colors">
+                        🚪 Logout
+                    </button>
+                </div>
+
+                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-2 lg:mb-4">🔒 Express VPN Free</h1>
+                <p class="text-orange-300 text-sm lg:text-base xl:text-lg font-semibold mb-3 lg:mb-4">PREMIUM ACCESS</p>
+                <p class="text-blue-200 text-sm sm:text-base md:text-lg lg:text-xl">Free VPN Credentials - Click to Copy</p>
+            </div>
+
+            <!-- Success Message -->
+            <div id="successMessage" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg hidden copy-success z-50">
+                ✅ Copied to clipboard!
+            </div>
+
+            <!-- VPN Accounts -->
+            <div class="grid gap-4 lg:gap-6 xl:gap-8 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 max-w-7xl mx-auto" id="accountsContainer">
+                <!-- Accounts will be generated by JavaScript -->
+            </div>
+
+            <!-- Instructions -->
+            <div class="mt-6 lg:mt-8 xl:mt-10 bg-white/5 backdrop-blur-lg rounded-xl p-4 lg:p-6 xl:p-8 border border-white/10 max-w-7xl mx-auto">
+                <h3 class="text-lg lg:text-xl xl:text-2xl font-semibold text-white mb-3 lg:mb-4 xl:mb-6">📖 How to Use</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4 xl:gap-6 text-blue-200 text-sm lg:text-base xl:text-lg">
+                    <div>
+                        <p class="mb-2 lg:mb-3">1. Click any "📋 Copy" button to copy credentials</p>
+                        <p class="mb-2 lg:mb-3">2. Open your VPN app</p>
+                    </div>
+                    <div>
+                        <p class="mb-2 lg:mb-3">3. Paste the username and password</p>
+                        <p class="mb-2 lg:mb-3">4. Enter the activation code if required</p>
+                    </div>
+                    <div>
+                        <p class="mb-2 lg:mb-3">5. Connect to your preferred server</p>
+                        <p>6. Enjoy secure browsing! 🔐</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="text-center mt-6 lg:mt-8">
+                <p class="text-blue-300 text-xs sm:text-sm lg:text-base xl:text-lg">🌟 Free VPN Access - Updated Daily</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel Modal -->
+    <div id="adminPanel" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden">
+        <div class="min-h-full flex items-center justify-center px-4 lg:px-6">
+            <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6 lg:p-8 xl:p-10 border border-white/20 shadow-xl max-w-2xl lg:max-w-4xl xl:max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+                <div class="flex justify-between items-center mb-6 lg:mb-8">
+                    <h2 class="text-2xl lg:text-3xl xl:text-4xl font-bold text-white">⚙️ Admin Panel</h2>
+                    <button onclick="hideAdminPanel()" class="text-white hover:text-red-400 text-2xl lg:text-3xl xl:text-4xl">✕</button>
+                </div>
+
+                <div class="space-y-4" id="adminAccountsList">
+                    <!-- Admin controls will be generated by JavaScript -->
+                </div>
+
+                <div class="mt-6 lg:mt-8 pt-4 lg:pt-6 border-t border-white/20">
+                    <button onclick="saveAllDates()" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 lg:py-4 xl:py-5 rounded-lg font-medium text-base lg:text-lg xl:text-xl transition-colors">
+                        💾 Save All Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Default account data
+        const defaultAccounts = [
+          { id: 1, username: 'skylinkvpnchannel@free.com', password: 'g6ZCYGks', pc: 'EJFGRM9K89V2PN28B2H8G3W', startDate: '10-10-2025' },
+            { id: 2, username: 'skylink@mm.com', password: 'Pjgxav6u', pc: 'EPXT6WYXN9KL9EQ44R9367A', startDate: '9-10-2025' },
+            { id: 3, username: 'skylinkvpn@channel.com', password: 'T6bx4fS4', pc: 'E6RKVB6K4GMR5534M5KV46K', startDate: '8-10-2025' },
+            { id: 4, username: 'skylink@channel.com', password: 'eyyH4dFd', pc: 'EELENGBJQN6X76EZLBJQJ6G', startDate: '8-10-2025' },
+            { id: 5, username: 'donation@free.com', password: 'D0nat!on2025', pc: null, startDate: '8-10-2025' },
+            { id: 6, username: 'donation1@free.com', password: 'wZ5BHz8C', pc: null, startDate: '8-10-2025' },
+            { id: 7, username: 'donation2@free.com', password: '3yBW4hu3', pc: null, startDate: '8-10-2025' }
+        ];
+
+
+        // Load accounts from localStorage or use defaults
+
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98be549b2336fdc5',t:'MTc2MDAxNzY1My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
